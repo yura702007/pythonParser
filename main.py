@@ -8,6 +8,7 @@ URL = 'https://www.avito.ru/moskva/telefony/mobilnye_telefony/samsung-ASgBAgICAk
 
 def get_html(url=URL):
     r = requests.get(url)
+    print(r.status_code)
     return r.text
 
 
@@ -34,17 +35,15 @@ def html_data(html_text):
         # try:
         #     title =
 
+
 def main():
     resp = get_html()
-    get_total_pages(resp)
     # count_links = get_total_pages(resp) + 1
-    # for i in range(1, 4):
-    #     gen_url = URL + str(i)
-    #     page_html = get_html(gen_url)
-    #     html_data(page_html)
-    # gen_url = URL + '4'
-    # page_html = get_html(gen_url)
-    # html_data(page_html)
+    for i in range(1, 4):
+        gen_url = URL + str(i)
+        page_html = get_html(gen_url)
+        html_data(page_html)
+        break
 
 
 if __name__ == '__main__':
