@@ -3,9 +3,11 @@ from pprint import pprint
 import requests
 from bs4 import BeautifulSoup
 from fake_ua import header
+import csv
 
 URL = 'https://www.avito.ru/moskva/telefony/mobilnye_telefony/samsung-ASgBAgICAkS0wA2crzmwwQ2I_Dc?p='
 FIELD_NAMES = ('title', 'price', 'metro', 'url')
+DATA_LIST = []
 
 
 def get_html(url=URL):
@@ -41,10 +43,21 @@ def html_data(html_text):
             url = 'https://www.avito.ru' + link.find('a').get('href')
         except:
             url = ''
-        # print(f'{title} - title')
-        # print(f'{price} - price')
-        # print(f'{metro}')
-        # print(f'{url} - url\n')
+        data_dict = {
+            'title': title,
+            'price': price,
+            'metro': metro,
+            'url': url
+        }
+        DATA_LIST.append(data_dict)
+
+
+def write_file():
+    with open('phones.csv', 'w', newline='', encoding='utf8') as file:
+        writer = csv.DictWriter(file, fieldnames=FIELD_NAMES)
+        writer.writeheader()
+        for row in DATA_LIST:
+            writer.writerow(row)
 
 
 def main():
@@ -54,7 +67,7 @@ def main():
         gen_url = URL + str(i)
         page_html = get_html(gen_url)
         html_data(page_html)
-        break
+    write_file()
 
 
 if __name__ == '__main__':
