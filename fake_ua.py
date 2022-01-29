@@ -5,5 +5,7 @@ ua = user_agent()
 ua = user_agent("chrome")
 header = {'User-Agent': ua}
 
-my_page = requests.get('https://httpbin.org', headers=header)
-print(my_page.headers)
+if __name__ == '__main__':
+    print(header)
+    my_page = requests.get('https://httpbin.org', headers=header)
+    print(my_page.headers)
