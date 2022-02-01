@@ -6,6 +6,8 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
+from multiprocessing import Pool
 
 URL = 'https://coinmarketcap.com'
 FIELD_NAMES = ('name', 'price')
@@ -41,14 +43,21 @@ def write_csv(lst):
         writer.writeheader()
         for row in lst:
             writer.writerow(row)
+            print(f"{row['name']} is parse")
+
+
+def make_all(url):
+    data = get_data(url=url)
+    print(data)
 
 
 def main():
+    start = datetime.now()
     all_links = get_all_links(get_html())
-    data_list = []
-    for link in all_links:
-        data_list.append(get_data(link))
-    write_csv(data_list)
+    with Pool(40) as p:
+        p.map(make_all, all_links)
+    end = datetime.now()
+    print(end - start)
 
 
 if __name__ == '__main__':
