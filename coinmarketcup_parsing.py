@@ -47,15 +47,15 @@ def write_csv(lst):
 
 
 def make_all(url):
-    data = get_data(url=url)
-    print(data)
+    return get_data(url=url)
 
 
 def main():
     start = datetime.now()
     all_links = get_all_links(get_html())
     with Pool(40) as p:
-        p.map(make_all, all_links)
+        data_list = p.map(make_all, all_links)
+    write_csv(data_list)
     end = datetime.now()
     print(end - start)
 
