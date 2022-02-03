@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from PIL import Image
 
 URL = 'https://www.avito.ru/moskva/telefony/samsung_galaxy_a52_8256gb_black_ru_2305099331'
 
@@ -9,12 +10,16 @@ class Bot:
         self.url = url
         self.path_to_screen = 'avito_screen.png'
         self.driver = webdriver.Firefox()
-        self.image_pos = None
 
     def run(self):
         self.navigate()
         self.take_screen()
-        self.get_num_pos()
+        self.get_num_img()
+
+    def get_num_img(self):
+        coord = self.get_num_pos()
+        image = Image.open('avito_screen.png')
+        image.crop((coord['x1'], coord['y1'], coord['x2'], coord['y2'])).save('tel_num.gif')
 
     def get_num_pos(self):
         image = self.driver.find_element(By.XPATH, '//img[@class="contacts-phone-3KtSI"]')
@@ -22,7 +27,7 @@ class Bot:
         y1 = image.location['y']
         x2 = x1 + image.size['width']
         y2 = y1 + image.size['height']
-        self.image_pos = {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}
+        return {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}
 
     def take_screen(self):
         self.driver.save_screenshot('avito_screen.png')
@@ -38,8 +43,6 @@ class Bot:
 def main():
     bot = Bot()
     bot.run()
-    # TODO import pillow
-    print(bot.image_pos)
 
 
 if __name__ == '__main__':
