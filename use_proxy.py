@@ -11,7 +11,7 @@ def get_html(url=URL):
 
 def get_ip(html_text):
     soup = BeautifulSoup(html_text, 'lxml')
-    ip = soup.find('span', class_='ip').text
+    ip = soup.find('span', class_='ip').text.strip()
     print(ip)
 
 
