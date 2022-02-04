@@ -1,20 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+from random import choice
 
 URL = 'https://sitespy.ru/my-ip'
 
 
-def get_html(url=URL):
-    r = requests.get(url=url)
+def get_html(url=URL, user_agent=None, proxy=None):
+    print(proxy)
+    r = requests.get(url=url, headers=user_agent, proxies=proxy)
     return r.text
 
 
 def get_ip(html_text):
+    print('Proxy & User-Agent')
     soup = BeautifulSoup(html_text, 'lxml')
     ip = soup.find('span', class_='ip').text.strip()
     ua = soup.find('span', class_='ip').find_next_sibling('span').text.strip()
     print(ip, '\n', ua)
+    print('=' * 200)
 
 
 def get_proxy():
@@ -35,9 +39,14 @@ def get_ua():
 
 
 def main():
+    get_ip(get_html())
     list_proxy = get_proxy()
     list_ua = get_ua()
-    get_ip(get_html())
+    for item in list_proxy:
+        proxy = {'http': f'http://{item["ip"]}:{item["port"]}'}
+        ua = {'User-Agent': choice(list_ua)}
+        html_text = get_html(user_agent=ua, proxy=proxy)
+        get_ip(html_text=html_text)
 
 
 if __name__ == '__main__':
