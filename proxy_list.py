@@ -24,9 +24,14 @@ def get_proxy(html_text):
     return proxy_lst
 
 
-def to_string(dict_data):
-    # TODO ДОПИСАТЬ ФУНЦИЮ
-    pass
+def get_proxies(dict_data):
+    _proxy = []
+    while dict_data:
+        item = dict_data.pop(0)
+        key = item['Protocol']
+        value = f'{item["Protocol"]}://{item["IP Address"]}:{item["Port"]}'
+        _proxy.append({key: value})
+    return _proxy
 
 
 def define_protocol(data):
@@ -41,6 +46,7 @@ def define_protocol(data):
 
 proxy_list = get_proxy(get_html())
 proxy_list = define_protocol(proxy_list)
+proxies = get_proxies(proxy_list)
 
 if __name__ == '__main__':
-    pprint(proxy_list)
+    pprint(proxies)
