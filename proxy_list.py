@@ -29,7 +29,18 @@ def to_string(dict_data):
     pass
 
 
-proxese = get_proxy(get_html())
+def define_protocol(data):
+    for item in data:
+        t = item.pop('Https')
+        if t == 'yes':
+            item['Protocol'] = 'https'
+        elif t == 'no':
+            item['Protocol'] = 'http'
+    return data
+
+
+proxy_list = get_proxy(get_html())
+proxy_list = define_protocol(proxy_list)
 
 if __name__ == '__main__':
-    pprint(proxese)
+    pprint(proxy_list)
